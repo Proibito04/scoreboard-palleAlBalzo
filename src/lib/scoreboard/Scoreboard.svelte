@@ -24,8 +24,15 @@
 
 		// Process each match to build standings
 		matches.forEach((match) => {
+			if (match.gol_squadra_1 == '-' || match.gol_squadra_2 == '-') return;
 			// Initialize teams if not already in standings
 			[match.squadra_1, match.squadra_2].forEach((team) => {
+				if (typeof match.gol_squadra_1 == 'string')
+					match.gol_squadra_1 = parseInt(match.gol_squadra_1);
+
+				if (typeof match.gol_squadra_2 == 'string')
+					match.gol_squadra_2 = parseInt(match.gol_squadra_2);
+
 				if (!standings.has(team)) {
 					standings.set(team, {
 						team,
@@ -50,10 +57,10 @@
 			team2.played++;
 
 			// Update goals
-			team1.goalsFor += parseInt(match.gol_squadra_1);
-			team1.goalsAgainst += parseInt(match.gol_squadra_2);
-			team2.goalsFor += parseInt(match.gol_squadra_2);
-			team2.goalsAgainst += parseInt(match.gol_squadra_1);
+			team1.goalsFor += match.gol_squadra_1 as number;
+			team1.goalsAgainst += match.gol_squadra_2 as number;
+			team2.goalsFor += match.gol_squadra_2 as number;
+			team2.goalsAgainst += match.gol_squadra_1 as number;
 
 			// Update points and results
 			if (match.gol_squadra_1 > match.gol_squadra_2) {
@@ -100,7 +107,7 @@
 				<th class="px-4 py-2">Punti</th>
 				<th class="px-4 py-2">G</th>
 				<th class="px-4 py-2">V</th>
-				<th class="px-4 py-2">Pareggio</th>
+				<th class="px-4 py-2">PG</th>
 				<th class="px-4 py-2">S</th>
 				<th class="px-4 py-2">GF</th>
 				<th class="px-4 py-2">GS</th>
