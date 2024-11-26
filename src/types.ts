@@ -7,3 +7,9 @@ export interface matchDay {
 	data: string;
 	giornata: string;
 }
+
+export interface ScoreCard {
+	[key: `${number}`]: number | null;
+	squadra: string;
+	MARCATORI: string;
+}
