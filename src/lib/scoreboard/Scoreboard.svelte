@@ -111,7 +111,7 @@
 						<td class="sticky left-0 bg-white px-4 py-3 text-center font-semibold">
 							{i + 1}
 						</td>
-						<td class="sticky left-12 bg-white px-4 py-3 font-medium">
+						<td class="left-12 bg-white px-4 py-3 font-medium">
 							{team.team}
 						</td>
 						<td class="px-4 py-3 text-center font-bold text-blue-600">{team.points}</td>
