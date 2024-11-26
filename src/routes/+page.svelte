@@ -9,7 +9,7 @@
 </script>
 
 <!-- Standings Section - Show First on Mobile -->
-<section class="mb-8">
+<section>
 	<Box>
 		{#snippet title()}
 			<h2 class="flex items-center text-xl font-bold text-gray-800">
@@ -65,8 +65,8 @@
 			</h2>
 		{/snippet}
 		{#await data.scoreboard}
-    <span>Caricamento calendario</span>
-    {:then}
+			<span>Caricamento calendario</span>
+		{:then records}
 			<div class="-mx-3 overflow-x-auto sm:mx-0">
 				<div class="p-3">
 					<EventCalendar eventCalendar={records} />
@@ -125,7 +125,7 @@
 					/>
 				</g>
 			</svg>
-			Scorers
+			Marcatori
 		</h2>
 		{#await data.scorers}
 			<span>Caricamento marcatori</span>

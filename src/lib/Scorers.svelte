@@ -21,7 +21,6 @@
 </script>
 
 <div class="mx-auto max-w-2xl p-4">
-	<h2 class="mb-4 text-center text-2xl font-bold">Marcatori</h2>
 
 	<div class="flex flex-col gap-3">
 		{#each recalculatedScorers as scorer, index}
