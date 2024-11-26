@@ -31,7 +31,7 @@
 			</h2>
 		{/snippet}
 		{#await data.scoreboard}
-			<span>Loading scoreboard</span>
+			<span>Caricamento classifica</span>
 		{:then records}
 			<div class="-mx-3 overflow-x-auto sm:mx-0">
 				<div class="p-3">
@@ -64,7 +64,9 @@
 				Calendario
 			</h2>
 		{/snippet}
-		{#await data.scoreboard then records}
+		{#await data.scoreboard}
+    <span>Caricamento calendario</span>
+    {:then}
 			<div class="-mx-3 overflow-x-auto sm:mx-0">
 				<div class="p-3">
 					<EventCalendar eventCalendar={records} />
@@ -126,7 +128,7 @@
 			Scorers
 		</h2>
 		{#await data.scorers}
-			<span>Loading scorers</span>
+			<span>Caricamento marcatori</span>
 		{:then scorers}
 			<Scorers {scorers}></Scorers>
 		{/await}
