@@ -22,10 +22,9 @@
 	function calculateStandings(matches: matchDay[]): Standing[] {
 		const standings = new Map<string, Standing>();
 
-		// Process each match to build standings
 		matches.forEach((match) => {
 			if (match.gol_squadra_1 == '-' || match.gol_squadra_2 == '-') return;
-			// Initialize teams if not already in standings
+
 			[match.squadra_1, match.squadra_2].forEach((team) => {
 				if (typeof match.gol_squadra_1 == 'string')
 					match.gol_squadra_1 = parseInt(match.gol_squadra_1);
@@ -48,85 +47,95 @@
 				}
 			});
 
-			// Update match statistics
 			const team1 = standings.get(match.squadra_1)!;
 			const team2 = standings.get(match.squadra_2)!;
 
-			// Update games played
 			team1.played++;
 			team2.played++;
 
-			// Update goals
 			team1.goalsFor += match.gol_squadra_1 as number;
 			team1.goalsAgainst += match.gol_squadra_2 as number;
 			team2.goalsFor += match.gol_squadra_2 as number;
 			team2.goalsAgainst += match.gol_squadra_1 as number;
 
-			// Update points and results
 			if (match.gol_squadra_1 > match.gol_squadra_2) {
-				// Team 1 wins
 				team1.points += 3;
 				team1.won++;
 				team2.lost++;
 			} else if (match.gol_squadra_1 < match.gol_squadra_2) {
-				// Team 2 wins
 				team2.points += 3;
 				team2.won++;
 				team1.lost++;
 			} else {
-				// Draw
 				team1.points++;
 				team2.points++;
 				team1.drawn++;
 				team2.drawn++;
 			}
 
-			// Update goal differences
 			team1.goalDifference = team1.goalsFor - team1.goalsAgainst;
 			team2.goalDifference = team2.goalsFor - team2.goalsAgainst;
 		});
 
-		// Convert to array and sort
 		return Array.from(standings.values()).sort(
 			(a, b) =>
-				// Sort by points first, then goal difference, then goals scored
 				b.points - a.points || b.goalDifference - a.goalDifference || b.goalsFor - a.goalsFor
 		);
 	}
 
-	// Reactive statement to recalculate standings when matches change
 	const standings = $state(calculateStandings(matches));
+
+	// Funzione per determinare lo stile della riga in base alla posizione
+	function getRowStyle(position: number): string {
+		if (position <= 4) return 'border-l-4 border-l-blue-600';
+		if (position >= standings.length - 3) return 'border-l-4 border-l-red-500';
+		return '';
+	}
 </script>
 
-<div class="w-full overflow-x-auto">
+<div class="borde w-full overflow-x-auto rounded-xl p-4">
 	<table class="min-w-full table-auto">
-		<thead class="bg-gray-100">
-			<tr>
-				<th class="px-4 py-2">Pos</th>
-				<th class="px-4 py-2 text-left">Squadra</th>
-				<th class="px-4 py-2">Punti</th>
-				<th class="px-4 py-2">G</th>
-				<th class="px-4 py-2">V</th>
-				<th class="px-4 py-2">PG</th>
-				<th class="px-4 py-2">S</th>
-				<th class="px-4 py-2">GF</th>
-				<th class="px-4 py-2">GS</th>
-				<th class="px-4 py-2">DR</th>
+		<thead>
+			<tr class="border-b border-slate-200 text-sm text-slate-600">
+				<th class="px-4 py-3">Pos</th>
+				<th class="px-4 py-3 text-left">Squadra</th>
+				<th class="px-4 py-3">PT</th>
+				<th class="hidden px-4 py-3 sm:table-cell">G</th>
+				<th class="hidden px-4 py-3 sm:table-cell">V</th>
+				<th class="hidden px-4 py-3 sm:table-cell">N</th>
+				<th class="hidden px-4 py-3 sm:table-cell">P</th>
+				<th class="hidden px-4 py-3 lg:table-cell">GF</th>
+				<th class="hidden px-4 py-3 lg:table-cell">GS</th>
+				<th class="px-4 py-3">DR</th>
 			</tr>
 		</thead>
 		<tbody>
 			{#each standings as team, i}
-				<tr class="border-b hover:bg-gray-50">
-					<td class="px-4 py-2 text-center">{i + 1}</td>
-					<td class="px-4 py-2">{team.team}</td>
-					<td class="px-4 py-2 text-center font-bold">{team.points}</td>
-					<td class="px-4 py-2 text-center">{team.played}</td>
-					<td class="px-4 py-2 text-center">{team.won}</td>
-					<td class="px-4 py-2 text-center">{team.drawn}</td>
-					<td class="px-4 py-2 text-center">{team.lost}</td>
-					<td class="px-4 py-2 text-center">{team.goalsFor}</td>
-					<td class="px-4 py-2 text-center">{team.goalsAgainst}</td>
-					<td class="px-4 py-2 text-center">{team.goalDifference}</td>
+				<tr class={`border-b border-slate-100 text-sm hover:bg-slate-50 ${getRowStyle(i + 1)}`}>
+					<td class="px-4 py-3 text-center font-semibold">
+						{i + 1}
+					</td>
+					<td class="px-4 py-3 font-medium">{team.team}</td>
+					<td class="px-4 py-3 text-center font-bold text-blue-600">{team.points}</td>
+					<td class="hidden px-4 py-3 text-center text-slate-600 sm:table-cell">{team.played}</td>
+					<td class="hidden px-4 py-3 text-center text-slate-600 sm:table-cell">{team.won}</td>
+					<td class="hidden px-4 py-3 text-center text-slate-600 sm:table-cell">{team.drawn}</td>
+					<td class="hidden px-4 py-3 text-center text-slate-600 sm:table-cell">{team.lost}</td>
+					<td class="hidden px-4 py-3 text-center text-slate-600 lg:table-cell">{team.goalsFor}</td>
+					<td class="hidden px-4 py-3 text-center text-slate-600 lg:table-cell"
+						>{team.goalsAgainst}</td
+					>
+					<td class="px-4 py-3 text-center font-medium">
+						<span
+							class={team.goalDifference > 0
+								? 'text-blue-600'
+								: team.goalDifference < 0
+									? 'text-red-500'
+									: 'text-slate-600'}
+						>
+							{team.goalDifference > 0 ? '+' : ''}{team.goalDifference}
+						</span>
+					</td>
 				</tr>
 			{/each}
 		</tbody>
